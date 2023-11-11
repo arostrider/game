@@ -10,5 +10,5 @@ class GameWindow:
 
 
 class ContentDir:
-    ROOT = Path("./content")
+    ROOT = Path("../content")
     GRAPHICS = ROOT / "graphics"

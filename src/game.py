@@ -1,7 +1,7 @@
 import pygame
 
-from config import GameWindow, ContentDir
-from game_types import Player, SpriteSheet, Sprite
+from src.config import GameWindow, ContentDir
+from src.game_types import Player, SpriteSheet, Sprite
 
 if __name__ == "__main__":
     pygame.init()

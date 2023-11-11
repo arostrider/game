@@ -2,7 +2,7 @@ import abc
 
 import pygame
 
-from sprite_sheet_maps import GirlSubsprite
+from src.sprite_sheet_maps import GirlSubsprite
 
 
 class Drawable(abc.ABC):
