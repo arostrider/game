@@ -19,6 +19,8 @@ if __name__ == "__main__":
 
     pygame.display.set_caption(SCREEN_CAPTION)
 
+    grass = Sprite(pygame.image.load(GRAPHICS_DIR / "grass.png"))
+
     player = Player(sprite=SpriteSheet(pygame.image.load(GRAPHICS_DIR / "girl.png"),
                                        columns=4,
                                        rows=4),
