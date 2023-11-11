@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pygame
 
-from game_types import Player, SpriteSheet
+from game_types import Player, SpriteSheet, Sprite
 
 SCREEN_CAPTION = "Testing out Pygame!"
 SCREEN_WIDTH = 640
