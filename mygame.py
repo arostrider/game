@@ -35,6 +35,7 @@ if __name__ == "__main__":
                 done = True
 
         window.fill(BACKGROUND_COLOR)
+        window.blit(**grass.draw_kwargs(0, 0))
 
         player.handle_keys()
         window.blit(**player.draw_sprite_kwargs(column=0, row=0))
