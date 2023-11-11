@@ -25,7 +25,7 @@ if __name__ == "__main__":
                                        columns=4,
                                        rows=4),
                     start_position=(20, 20),
-                    start_speed=10)
+                    start_speed=5)
 
     done = False
 
