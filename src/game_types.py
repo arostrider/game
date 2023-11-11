@@ -11,12 +11,12 @@ class Drawable(abc.ABC):
 
     @property
     @abc.abstractmethod
-    def width(self) -> int:
+    def width(self) -> float:
         ...
 
     @property
     @abc.abstractmethod
-    def height(self) -> int:
+    def height(self) -> float:
         ...
 
     def desired_on_screen_position(self, x: float, y: float) -> pygame.Rect:
@@ -24,6 +24,7 @@ class Drawable(abc.ABC):
 
     @abc.abstractmethod
     def draw_kwargs(self, *args, **kwargs) -> dict:
+        """Method preparing args to be used in pygame.Surface.blit method call"""
         ...
 
 
@@ -39,8 +40,7 @@ class Sprite(Drawable):
     def height(self) -> int:
         return self.image.get_height()
 
-    def draw_kwargs(self, x: int, y: int):
-        """Method preparing args to be used in pygame.Surface.blit method call"""
+    def draw_kwargs(self, x: int, y: int) -> dict:
         return {"source": self.image,
                 "dest": self.desired_on_screen_position(x, y)}
 
