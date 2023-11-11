@@ -1,27 +1,19 @@
-from pathlib import Path
-
 import pygame
 
+from config import GameWindow, ContentDir
 from game_types import Player, SpriteSheet, Sprite
-
-SCREEN_CAPTION = "Testing out Pygame!"
-SCREEN_WIDTH = 640
-SCREEN_HEIGHT = 480
-FPS = 30
-BACKGROUND_COLOR = pygame.Color(50, 200, 255)
-GRAPHICS_DIR = Path("content/graphics")
 
 if __name__ == "__main__":
     pygame.init()
 
     timer = pygame.time.Clock()
-    window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    window = pygame.display.set_mode((GameWindow.WIDTH, GameWindow.HEIGHT))
 
-    pygame.display.set_caption(SCREEN_CAPTION)
+    pygame.display.set_caption(GameWindow.CAPTION)
 
-    grass = Sprite(pygame.image.load(GRAPHICS_DIR / "grass.png"))
+    grass = Sprite(pygame.image.load(ContentDir.GRAPHICS / "grass.png"))
 
-    player = Player(sprite=SpriteSheet(pygame.image.load(GRAPHICS_DIR / "girl.png"),
+    player = Player(sprite=SpriteSheet(pygame.image.load(ContentDir.GRAPHICS / "girl.png"),
                                        columns=4,
                                        rows=4),
                     start_position=(20, 20),
@@ -34,11 +26,11 @@ if __name__ == "__main__":
             if event.type == pygame.QUIT:
                 done = True
 
-        window.fill(BACKGROUND_COLOR)
+        window.fill(GameWindow.BACKGROUND_COLOR)
         window.blit(**grass.draw_kwargs(0, 0))
 
         player.handle_keys()
         window.blit(**player.draw_sprite_kwargs())
 
         pygame.display.update()
-        timer.tick(FPS)
+        timer.tick(GameWindow.FPS)
