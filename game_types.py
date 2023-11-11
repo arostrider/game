@@ -2,6 +2,8 @@ import abc
 
 import pygame
 
+from sprite_sheet_maps import GirlSubsprite
+
 
 class Drawable(abc.ABC):
     def __init__(self, image: pygame.Surface):
@@ -77,8 +79,9 @@ class GameObject(abc.ABC):
         self.sprite = sprite
         self.x, self.y = start_position
 
-    def draw_sprite_kwargs(self, column: int, row: int) -> dict:
-        return self.sprite.draw_kwargs(self.x, self.y, column, row)
+    @abc.abstractmethod
+    def draw_sprite_kwargs(self, *args, **kwargs) -> dict:
+        ...
 
 
 class MovableGameObject(GameObject):
@@ -86,18 +89,42 @@ class MovableGameObject(GameObject):
         super().__init__(sprite, start_position)
         self.speed = start_speed
 
+        self.sprite_direction = 0
+        self.sprite_phase = 0
+
+    def draw_sprite_kwargs(self) -> dict:
+        return self.sprite.draw_kwargs(self.x, self.y, row=self.sprite_direction, column=self.sprite_phase)
+
     def move(self, direction: tuple[int, int]):
-        self.x = self.x + direction[0] * self.speed
-        self.y = self.y + direction[1] * self.speed
+        dir_x, dir_y = direction
+
+        self.x = self.x + dir_x * self.speed
+        self.y = self.y + dir_y * self.speed
+
+        i = self.sprite_phase + 1 if self.sprite_phase != 3 else 0
+        new_subsprite = None
+
+        if dir_x == 1:
+            new_subsprite = GirlSubsprite.RIGHT[i]
+        elif dir_x == -1:
+            new_subsprite = GirlSubsprite.LEFT[i]
+
+        if dir_y == 1:
+            new_subsprite = GirlSubsprite.DOWN[i]
+        elif dir_y == -1:
+            new_subsprite = GirlSubsprite.UP[i]
+
+        self.sprite_phase, self.sprite_direction = new_subsprite
 
         # TODO: replace with debugger
         print(self.x)
         print(self.y)
+        print((self.sprite_phase, self.sprite_direction))
         print()
 
 
 class Player(MovableGameObject):
-    def __init__(self, sprite: Drawable, start_position: tuple[float, float], start_speed: float):
+    def __init__(self, sprite: SpriteSheet, start_position: tuple[float, float], start_speed: float):
         super().__init__(sprite, start_position, start_speed)
 
     def handle_keys(self):

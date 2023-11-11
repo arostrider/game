@@ -38,7 +38,7 @@ if __name__ == "__main__":
         window.blit(**grass.draw_kwargs(0, 0))
 
         player.handle_keys()
-        window.blit(**player.draw_sprite_kwargs(column=0, row=0))
+        window.blit(**player.draw_sprite_kwargs())
 
         pygame.display.update()
         timer.tick(FPS)
