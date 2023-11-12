@@ -1,4 +1,5 @@
 import abc
+import logging
 
 import pygame
 
@@ -124,10 +125,9 @@ class MovableGameObject(GameObject):
 
         self.sprite.curr_column, self.sprite.curr_row = new_subsprite
 
-        # TODO: replace with debugger
-        print(f"Moving object to {self.x}, {self.y}\n"
-              f"New sprite phase / direction: {self.sprite.curr_column} / {self.sprite.curr_row}"
-              f"\n")
+        logging.debug(f"Moving object to {self.x}, {self.y}\n"
+                      f"New sprite phase / direction: {self.sprite.curr_column} / {self.sprite.curr_row}"
+                      f"\n")
 
 
 class Player(MovableGameObject):
