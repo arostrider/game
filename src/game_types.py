@@ -117,10 +117,9 @@ class MovableGameObject(GameObject):
         self.sprite_phase, self.sprite_direction = new_subsprite
 
         # TODO: replace with debugger
-        print(self.x)
-        print(self.y)
-        print((self.sprite_phase, self.sprite_direction))
-        print()
+        print(f"Moving object to {self.x}, {self.y}\n"
+              f"New sprite phase / direction {self.sprite_phase} / {self.sprite_direction}"
+              f"\n")
 
 
 class Player(MovableGameObject):
