@@ -146,3 +146,7 @@ class Player(MovableGameObject):
             self.move((1, 0))
         elif key[pygame.K_LEFT]:
             self.move((-1, 0))
+
+        if not any((key[pygame.K_DOWN], key[pygame.K_UP], key[pygame.K_RIGHT], key[pygame.K_LEFT])):
+            # sprite stand still
+            self.sprite.curr_column = 1
