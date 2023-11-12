@@ -118,7 +118,7 @@ class MovableGameObject(GameObject):
 
         # TODO: replace with debugger
         print(f"Moving object to {self.x}, {self.y}\n"
-              f"New sprite phase / direction {self.sprite_phase} / {self.sprite_direction}"
+              f"New sprite phase / direction: {self.sprite_phase} / {self.sprite_direction}"
               f"\n")
 
 
