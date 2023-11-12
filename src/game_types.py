@@ -47,10 +47,16 @@ class Sprite(Drawable):
 
 class SpriteSheet(Drawable):
 
-    def __init__(self, image: pygame.Surface, columns: int, rows: int):
+    def __init__(self, image: pygame.Surface,
+                 columns: int, rows: int,
+                 start_column: int = 0, start_row: int = 0):
         super().__init__(image)
         self.columns = columns
         self.rows = rows
+
+        # keeping tack of current subsprite position in the sheet
+        self.curr_column = start_column
+        self.curr_row = start_row
 
     @property
     def width(self) -> float:
@@ -60,22 +66,19 @@ class SpriteSheet(Drawable):
     def height(self) -> float:
         return self.image.get_height() / self.rows
 
-    def subsprite(self, column: int, row: int) -> pygame.Rect:
-        return pygame.Rect(
-            column * self.width,
-            row * self.height,
-            self.width,
-            self.height)
-
     def draw_kwargs(self, x: float, y: float, column: int, row: int) -> dict:
         """Method preparing kwargs to be used in pygame.Surface.blit method call"""
         return {"source": self.image,
                 "dest": self.desired_on_screen_position(x, y),
-                "area": self.subsprite(column, row)}
+                "area": pygame.Rect(
+                    self.curr_column * self.width,
+                    self.curr_row * self.height,
+                    self.width,
+                    self.height)}
 
 
 class GameObject(abc.ABC):
-    def __init__(self, sprite: Drawable, start_position: tuple[float, float]):
+    def __init__(self, sprite, start_position: tuple[float, float]):
         self.sprite = sprite
         self.x, self.y = start_position
 
@@ -84,16 +87,21 @@ class GameObject(abc.ABC):
         ...
 
 
+class StaticGameObject(GameObject):
+    def __init__(self, sprite: Sprite, start_position: tuple[float, float]):
+        super().__init__(sprite, start_position)
+
+    def draw_sprite_kwargs(self) -> dict:
+        return self.sprite.draw_kwargs(self.x, self.y)
+
+
 class MovableGameObject(GameObject):
-    def __init__(self, sprite: Drawable, start_position: tuple[float, float], start_speed: float):
+    def __init__(self, sprite: SpriteSheet, start_position: tuple[float, float], start_speed: float):
         super().__init__(sprite, start_position)
         self.speed = start_speed
 
-        self.sprite_phase = 0
-        self.sprite_direction = 0
-
     def draw_sprite_kwargs(self) -> dict:
-        return self.sprite.draw_kwargs(self.x, self.y, row=self.sprite_direction, column=self.sprite_phase)
+        return self.sprite.draw_kwargs(self.x, self.y, column=self.sprite.curr_column, row=self.sprite.curr_row)
 
     def move(self, direction: tuple[int, int]):
         dir_x, dir_y = direction
@@ -101,7 +109,7 @@ class MovableGameObject(GameObject):
         self.x = self.x + dir_x * self.speed
         self.y = self.y + dir_y * self.speed
 
-        i = self.sprite_phase + 1 if self.sprite_phase != 3 else 0
+        i = self.sprite.curr_column + 1 if self.sprite.curr_column != 3 else 0
         new_subsprite = None
 
         if dir_x == 1:
@@ -114,11 +122,11 @@ class MovableGameObject(GameObject):
         elif dir_y == -1:
             new_subsprite = GirlSubsprite.UP[i]
 
-        self.sprite_phase, self.sprite_direction = new_subsprite
+        self.sprite.curr_column, self.sprite.curr_row = new_subsprite
 
         # TODO: replace with debugger
         print(f"Moving object to {self.x}, {self.y}\n"
-              f"New sprite phase / direction: {self.sprite_phase} / {self.sprite_direction}"
+              f"New sprite phase / direction: {self.sprite.curr_column} / {self.sprite.curr_row}"
               f"\n")
 
 
