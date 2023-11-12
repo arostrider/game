@@ -89,8 +89,8 @@ class MovableGameObject(GameObject):
         super().__init__(sprite, start_position)
         self.speed = start_speed
 
-        self.sprite_direction = 0
         self.sprite_phase = 0
+        self.sprite_direction = 0
 
     def draw_sprite_kwargs(self) -> dict:
         return self.sprite.draw_kwargs(self.x, self.y, row=self.sprite_direction, column=self.sprite_phase)
