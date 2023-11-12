@@ -1,7 +1,7 @@
 import pygame
 
 from src.config import GameWindow, ContentDir
-from src.game_types import Player, SpriteSheet, Sprite
+from src.game_types import Player, SpriteSheet, Sprite, StaticGameObject
 
 if __name__ == "__main__":
     pygame.init()
@@ -11,7 +11,12 @@ if __name__ == "__main__":
 
     pygame.display.set_caption(GameWindow.CAPTION)
 
-    grass = Sprite(pygame.image.load(ContentDir.GRAPHICS / "grass.png"))
+    grass_image = pygame.image.load(ContentDir.GRAPHICS / "grass.png")
+
+    grasses = [StaticGameObject(sprite=Sprite(grass_image),
+                                start_position=(x, y))
+               for x in range(0, window.get_width(), grass_image.get_width())
+               for y in range(0, window.get_height(), grass_image.get_height())]
 
     player = Player(sprite=SpriteSheet(pygame.image.load(ContentDir.GRAPHICS / "girl.png"),
                                        columns=4,
@@ -27,7 +32,8 @@ if __name__ == "__main__":
                 done = True
 
         window.fill(GameWindow.BACKGROUND_COLOR)
-        window.blit(**grass.draw_kwargs(0, 0))
+        for grass in grasses:
+            window.blit(**grass.draw_sprite_kwargs())
 
         player.handle_keys()
         window.blit(**player.draw_sprite_kwargs())
