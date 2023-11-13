@@ -61,7 +61,9 @@ def test_sprite(width, height, x, y):
                                         "dest": sprite.desired_on_screen_position(x, y)}
 
 
-@pytest.mark.parametrize(("width", "height"), [(128, 192)])
+@pytest.mark.parametrize(("width", "height"), [(128, 192),
+                                               (192, 128),
+                                               (192, 192)])
 @pytest.mark.parametrize(("columns", "rows"), [(4, 4)])
 @pytest.mark.parametrize(("x", "y"), COORDINATES)
 @pytest.mark.parametrize(("subsprite_column", "subsprite_row"), COORDINATES)
