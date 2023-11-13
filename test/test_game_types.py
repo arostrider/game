@@ -83,3 +83,12 @@ def test_sprite_sheet(width, height, columns, rows, x, y, subsprite_column, subs
         x, y, subsprite_column, subsprite_row) == {"source": sprite_sheet.image,
                                                    "dest": sprite_sheet.desired_on_screen_position(x, y),
                                                    "area": sprite_sheet.curr_subsprite()}
+
+
+@pytest.mark.parametrize(("width", "height"), COORDINATES)
+@pytest.mark.parametrize(("x", "y"), COORDINATES)
+def test_static_game_object(x, y, width, height):
+    image = MockImage(width=width, height=height)
+    static_game_object = StaticGameObject(sprite=Sprite(image=image), start_position=(x, y))
+
+    assert static_game_object.draw_sprite_kwargs() == static_game_object.sprite.draw_kwargs(x, y)
