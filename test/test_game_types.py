@@ -59,3 +59,7 @@ def test_sprite(width, height, x, y):
 
     assert sprite.draw_kwargs(x, y) == {"source": image,
                                         "dest": sprite.desired_on_screen_position(x, y)}
+
+
+def test_sprite_sheet():
+    ...

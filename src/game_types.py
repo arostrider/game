@@ -67,15 +67,19 @@ class SpriteSheet(Drawable):
     def height(self) -> float:
         return self.image.get_height() / self.rows
 
+    def curr_subsprite(self) -> pygame.Rect:
+        """Extracts subsprite for the sprite sheet, most likely to be used for sprite animation purposes."""
+        return pygame.Rect(
+            self.curr_column * self.width,
+            self.curr_row * self.height,
+            self.width,
+            self.height)
+
     def draw_kwargs(self, x: float, y: float, column: int, row: int) -> dict:
         """Method preparing kwargs to be used in pygame.Surface.blit method call"""
         return {"source": self.image,
                 "dest": self.desired_on_screen_position(x, y),
-                "area": pygame.Rect(
-                    self.curr_column * self.width,
-                    self.curr_row * self.height,
-                    self.width,
-                    self.height)}
+                "area": self.curr_subsprite()}
 
 
 class GameObject(abc.ABC):
