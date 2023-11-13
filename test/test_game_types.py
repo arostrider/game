@@ -1,7 +1,9 @@
+import random
+
+import pygame
 import pytest
 
 from src.game_types import Drawable, Sprite, SpriteSheet, StaticGameObject, MovableGameObject
-import pygame
 
 
 class DrawableChild(Drawable):
@@ -104,7 +106,8 @@ class TestMovableGameObject:
     @pytest.mark.parametrize(("curr_column", "curr_row"), [(i, j) for i in range(4) for j in range(4)])
     def test_movable_game_object_draw_sprite_kwargs(x, y, width, height, curr_column, curr_row):
         image = MockImage(width=width, height=height)
-        mgo = MovableGameObject(sprite=SpriteSheet(image=image, columns=4, rows=4), start_position=(x, y),
+        mgo = MovableGameObject(sprite=SpriteSheet(image=image, columns=4, rows=4),
+                                start_position=(x, y),
                                 start_speed=5)
 
         mgo.sprite.curr_column = curr_column
@@ -119,7 +122,8 @@ class TestMovableGameObject:
     @pytest.mark.parametrize("move_direction", ["up", "down", "left", "right"])
     def test_movable_game_object_move(x, y, width, height, move_direction):
         image = MockImage(width=width, height=height)
-        mgo = MovableGameObject(sprite=SpriteSheet(image=image, columns=4, rows=4), start_position=(x, y),
+        mgo = MovableGameObject(sprite=SpriteSheet(image=image, columns=4, rows=4),
+                                start_position=(x, y),
                                 start_speed=5)
 
         prev_x, prev_y = mgo.x, mgo.y
@@ -135,3 +139,21 @@ class TestMovableGameObject:
 
         assert mgo.x == prev_x + dir_x * mgo.speed
         assert mgo.y == prev_y + dir_y * mgo.speed
+
+    @staticmethod
+    def test_movable_game_object_move_many_times(x, y, width, height):
+        image = MockImage(width=width, height=height)
+        mgo = MovableGameObject(sprite=SpriteSheet(image=image, columns=4, rows=4),
+                                start_position=(x, y),
+                                start_speed=5)
+
+        directions = [(0, -1), (0, 1), (-1, 0), (1, 0)]
+
+        for _ in range(100_000):
+            prev_x, prev_y = mgo.x, mgo.y
+
+            dir_x, dir_y = random.choice(directions)
+            mgo.move((dir_x, dir_y))
+
+            assert mgo.x == prev_x + dir_x * mgo.speed
+            assert mgo.y == prev_y + dir_y * mgo.speed
