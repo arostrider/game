@@ -149,4 +149,4 @@ class Player(MovableGameObject):
 
         if not any((key[pygame.K_DOWN], key[pygame.K_UP], key[pygame.K_RIGHT], key[pygame.K_LEFT])):
             # sprite stand still
-            self.sprite.curr_column = 1
+            self.sprite.curr_column = GirlSubsprite.STANDING
