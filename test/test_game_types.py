@@ -1,6 +1,6 @@
 import pytest
 
-from src.game_types import Drawable, Sprite, SpriteSheet, StaticGameObject
+from src.game_types import Drawable, Sprite, SpriteSheet, StaticGameObject, MovableGameObject
 import pygame
 
 
