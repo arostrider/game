@@ -100,7 +100,6 @@ def test_static_game_object(x, y, width, height):
 @pytest.mark.parametrize(("width", "height"), SPRITE_SHEET_DIMENSIONS)
 @pytest.mark.parametrize(("x", "y"), [(-10, -10), (0, 0), (10, 10)])
 class TestMovableGameObject:
-    previous_position: tuple[int, int]
 
     @staticmethod
     @pytest.mark.parametrize(("curr_column", "curr_row"), [(i, j) for i in range(4) for j in range(4)])
