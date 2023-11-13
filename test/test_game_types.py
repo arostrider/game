@@ -93,3 +93,19 @@ def test_static_game_object(x, y, width, height):
     static_game_object = StaticGameObject(sprite=Sprite(image=image), start_position=(x, y))
 
     assert static_game_object.draw_sprite_kwargs() == static_game_object.sprite.draw_kwargs(x, y)
+
+
+@pytest.mark.parametrize(("width", "height"), SPRITE_SHEET_DIMENSIONS)
+@pytest.mark.parametrize(("x", "y"), [(-10, -10), (0, 0), (10, 10)])
+@pytest.mark.parametrize(("curr_column", "curr_row"), [(i, j) for i in range(4) for j in range(4)])
+def test_movable_game_object(x, y, width, height, curr_column, curr_row):
+    image = MockImage(width=width, height=height)
+    mgo = MovableGameObject(sprite=SpriteSheet(image=image, columns=4, rows=4), start_position=(x, y), start_speed=5)
+
+    mgo.sprite.curr_column = curr_column
+    mgo.sprite.curr_row = curr_row
+
+    assert mgo.draw_sprite_kwargs() == mgo.sprite.draw_kwargs(mgo.x,
+                                                              mgo.y,
+                                                              column=mgo.sprite.curr_column,
+                                                              row=mgo.sprite.curr_row)
