@@ -97,15 +97,41 @@ def test_static_game_object(x, y, width, height):
 
 @pytest.mark.parametrize(("width", "height"), SPRITE_SHEET_DIMENSIONS)
 @pytest.mark.parametrize(("x", "y"), [(-10, -10), (0, 0), (10, 10)])
-@pytest.mark.parametrize(("curr_column", "curr_row"), [(i, j) for i in range(4) for j in range(4)])
-def test_movable_game_object(x, y, width, height, curr_column, curr_row):
-    image = MockImage(width=width, height=height)
-    mgo = MovableGameObject(sprite=SpriteSheet(image=image, columns=4, rows=4), start_position=(x, y), start_speed=5)
+class TestMovableGameObject:
+    previous_position: tuple[int, int]
 
-    mgo.sprite.curr_column = curr_column
-    mgo.sprite.curr_row = curr_row
+    @staticmethod
+    @pytest.mark.parametrize(("curr_column", "curr_row"), [(i, j) for i in range(4) for j in range(4)])
+    def test_movable_game_object_draw_sprite_kwargs(x, y, width, height, curr_column, curr_row):
+        image = MockImage(width=width, height=height)
+        mgo = MovableGameObject(sprite=SpriteSheet(image=image, columns=4, rows=4), start_position=(x, y),
+                                start_speed=5)
 
-    assert mgo.draw_sprite_kwargs() == mgo.sprite.draw_kwargs(mgo.x,
-                                                              mgo.y,
-                                                              column=mgo.sprite.curr_column,
-                                                              row=mgo.sprite.curr_row)
+        mgo.sprite.curr_column = curr_column
+        mgo.sprite.curr_row = curr_row
+
+        assert mgo.draw_sprite_kwargs() == mgo.sprite.draw_kwargs(mgo.x,
+                                                                  mgo.y,
+                                                                  column=mgo.sprite.curr_column,
+                                                                  row=mgo.sprite.curr_row)
+
+    @staticmethod
+    @pytest.mark.parametrize("move_direction", ["up", "down", "left", "right"])
+    def test_movable_game_object_move(x, y, width, height, move_direction):
+        image = MockImage(width=width, height=height)
+        mgo = MovableGameObject(sprite=SpriteSheet(image=image, columns=4, rows=4), start_position=(x, y),
+                                start_speed=5)
+
+        prev_x, prev_y = mgo.x, mgo.y
+
+        directions = {"up": (0, -1),
+                      "down": (0, 1),
+                      "left": (-1, 0),
+                      "right": (1, 0)}
+
+        dir_x, dir_y = directions[move_direction]
+
+        mgo.move((dir_x, dir_y))
+
+        assert mgo.x == prev_x + dir_x * mgo.speed
+        assert mgo.y == prev_y + dir_y * mgo.speed
