@@ -3,7 +3,7 @@ import logging
 
 import pygame
 
-from src.sprite_sheet_maps import GirlSubsprite
+from src.consts import GirlSubsprite, Direction
 
 
 class Drawable(abc.ABC):
@@ -142,14 +142,14 @@ class Player(MovableGameObject):
         key = pygame.key.get_pressed()
 
         if key[pygame.K_DOWN]:
-            self.move((0, 1))
+            self.move(Direction.DOWN)
         elif key[pygame.K_UP]:
-            self.move((0, -1))
+            self.move(Direction.UP)
 
         if key[pygame.K_RIGHT]:
-            self.move((1, 0))
+            self.move(Direction.RIGHT)
         elif key[pygame.K_LEFT]:
-            self.move((-1, 0))
+            self.move(Direction.LEFT)
 
         if not any((key[pygame.K_DOWN], key[pygame.K_UP], key[pygame.K_RIGHT], key[pygame.K_LEFT])):
             # sprite stand still

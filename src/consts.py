@@ -1,5 +1,5 @@
 class GirlSubsprite:
-    STANDING = 1    # index of subsprites which represent the girl standing pose
+    STANDING = 1  # index of subsprites which represent the girl standing pose
 
     DOWN = ((0, 0),
             (1, 0),
@@ -17,3 +17,10 @@ class GirlSubsprite:
              (1, 3),
              (2, 3),
              (3, 3))
+
+
+class Direction:
+    UP = (0, -1)
+    DOWN = (0, 1)
+    LEFT = (-1, 0)
+    RIGHT = (1, 0)
