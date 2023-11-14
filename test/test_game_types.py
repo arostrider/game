@@ -24,12 +24,15 @@ class DrawableChild(Drawable):
         raise NotImplemented
 
 
-COORDINATES = [(i, j) for i in range(-64, 64, 32) for j in range(-64, 64, 32)]
-COORDINATES.extend([(i, j) for i in range(-1, 1) for j in range(-1, 1)])
+SIZES = [(i, j) for i in range(-64, 64, 32) for j in range(-64, 64, 32)]
+SIZES.extend([(i, j) for i in range(-1, 1) for j in range(-1, 1)])
+
+SPRITE_SHEET_SIZES = [(128, 192), (192, 128), (192, 192)]
+POSITIONS = [(-10, 0), (0, -10), (-10, -10), (0, 0), (10, 10), (0, 10), (10, 0)]
 
 
-@pytest.mark.parametrize(("width", "height"), COORDINATES)
-@pytest.mark.parametrize(("x", "y"), COORDINATES)
+@pytest.mark.parametrize(("width", "height"), SIZES)
+@pytest.mark.parametrize(("x", "y"), POSITIONS)
 def test_drawable(width, height, x, y):
     drawable = DrawableChild(image="placeholder", width=width, height=height)
 
@@ -50,8 +53,8 @@ class MockImage:
         return self._height
 
 
-@pytest.mark.parametrize(("width", "height"), COORDINATES)
-@pytest.mark.parametrize(("x", "y"), COORDINATES)
+@pytest.mark.parametrize(("width", "height"), SIZES)
+@pytest.mark.parametrize(("x", "y"), POSITIONS)
 def test_sprite(width, height, x, y):
     image = MockImage(width=width, height=height)
     sprite = Sprite(image=image)
@@ -63,13 +66,10 @@ def test_sprite(width, height, x, y):
                                         "dest": sprite.desired_on_screen_position(x, y)}
 
 
-SPRITE_SHEET_DIMENSIONS = [(128, 192), (192, 128), (192, 192)]
-
-
-@pytest.mark.parametrize(("width", "height"), SPRITE_SHEET_DIMENSIONS)
+@pytest.mark.parametrize(("width", "height"), SPRITE_SHEET_SIZES)
 @pytest.mark.parametrize(("columns", "rows"), [(4, 4)])
-@pytest.mark.parametrize(("x", "y"), COORDINATES)
-@pytest.mark.parametrize(("subsprite_column", "subsprite_row"), COORDINATES)
+@pytest.mark.parametrize(("x", "y"), POSITIONS)
+@pytest.mark.parametrize(("subsprite_column", "subsprite_row"), SIZES)
 def test_sprite_sheet(width, height, columns, rows, x, y, subsprite_column, subsprite_row):
     image = MockImage(width=width, height=height)
     sprite_sheet = SpriteSheet(image=image, columns=4, rows=4)
@@ -88,8 +88,8 @@ def test_sprite_sheet(width, height, columns, rows, x, y, subsprite_column, subs
                                                    "area": sprite_sheet.curr_subsprite()}
 
 
-@pytest.mark.parametrize(("width", "height"), COORDINATES)
-@pytest.mark.parametrize(("x", "y"), COORDINATES)
+@pytest.mark.parametrize(("width", "height"), SIZES)
+@pytest.mark.parametrize(("x", "y"), POSITIONS)
 def test_static_game_object(x, y, width, height):
     image = MockImage(width=width, height=height)
     static_game_object = StaticGameObject(sprite=Sprite(image=image), start_position=(x, y))
@@ -97,8 +97,8 @@ def test_static_game_object(x, y, width, height):
     assert static_game_object.draw_sprite_kwargs() == static_game_object.sprite.draw_kwargs(x, y)
 
 
-@pytest.mark.parametrize(("width", "height"), SPRITE_SHEET_DIMENSIONS)
-@pytest.mark.parametrize(("x", "y"), [(-10, -10), (0, 0), (10, 10)])
+@pytest.mark.parametrize(("width", "height"), SPRITE_SHEET_SIZES)
+@pytest.mark.parametrize(("x", "y"), POSITIONS)
 class TestMovableGameObject:
 
     @staticmethod
